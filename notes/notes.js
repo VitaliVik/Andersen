@@ -80,9 +80,9 @@ addPanel.button.onclick = function(){
     var isStrike = false;
     note.text.onclick = function(){
         if(isStrike){
-            text.style.textDecoration = "";
+            note.text.style.textDecoration = "";
         }else{
-            text.style.textDecoration = "line-through";
+            note.text.style.textDecoration = "line-through";
         }     
         isStrike = !isStrike;
     }
