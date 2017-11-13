@@ -1,73 +1,84 @@
-function EditTextPanel(nameButton,defaultValue){
-    var cur = this; 
-    var event;
-    //event(data)
-    this.setListener = function(fn){
-        event = fn;
-    };
+function EditTextPanel(){
+    var container = document.createElement("div");
 
-    var text = document.createElement("input");
-    text.type = "text";
-    if(defaultValue){
-        text.value = defaultValue;
-    }
-    
+    var textEdit = document.createElement("input");
+    textEdit.type = "text";
+
     var button = document.createElement("input");
     button.type = "button";
-    button.value = nameButton;
-    button.onclick = function(){
-        event(text.value);
-        text.value = "";
-    }; 
-    var div = document.createElement("div");
-    div.appendChild(text);
-    div.appendChild(button);
 
-    this.container = div;
+    container.appendChild(textEdit);
+    container.appendChild(button);
+
+    this.container = container;
+    this.textEdit = textEdit;
+    this.button = button;
 }
 
 function ListPanel(){
-    var div = document.createElement("div");
-    this.addNote = function(value){
-        var note = new Note(value);
-        div.appendChild(note.container);
-    }
-    this.container = div;
+    this.container = document.createElement("div");
+    this.listNotes = document.createElement("div");
+
+    this.container.appendChild(this.listNotes);
 }
 
-function Note(value){
-    var div = document.createElement("div");
+function NotePanel(){
+    var container = document.createElement("div");
 
-    var text = document.createElement("span");
-    text.innerText = value;
+    var buttonDelete = document.createElement("input");
+    buttonDelete.type = "button";
+    buttonDelete.value = "Удалить";
 
-    var button = document.createElement("input");
-    button.type = "button";
-    button.value = "Удалить";
-    button.onclick = function(){
-        div.remove();
-    }
     var buttonEdit = document.createElement("input");
     buttonEdit.type = "button";
     buttonEdit.value = "Редактировать";
-    buttonEdit.onclick = function(){
-        var editPanel = new EditTextPanel("Сохранить",text.innerText);
-        editPanel.container.style.display="inline-block";
-        editPanel.setListener(function(data){
-            text.innerText = data;
-            body.appendChild(text);
-            editPanel.container.remove();
-            buttonEdit.style.display = "";
-        });
 
-        body.innerHTML = "";
-        body.appendChild(editPanel.container);
-        buttonEdit.style.display = "none";
-    }
     var body = document.createElement("div");
     body.style.display = "inline-block";
+    var text = document.createElement("span");
+
+    body.appendChild(text);
+    container.appendChild(body);
+    container.appendChild(buttonEdit);
+    container.appendChild(buttonDelete);
+
+    this.container = container;
+    this.buttonDelete = buttonDelete;
+    this.buttonEdit = buttonEdit;
+    this.body = body;
+    this.text = text;
+}
+
+var addPanel = new EditTextPanel();
+addPanel.button.value = "Cоздать";
+
+var listPanel = new ListPanel();
+
+addPanel.button.onclick = function(){
+    //Начало создания NotePanel
+    var note = new NotePanel();
+    note.text.innerText = addPanel.textEdit.value;
+    note.buttonDelete.onclick = function(){
+        note.container.remove();
+    }
+    note.buttonEdit.onclick = function(){
+        note.buttonEdit.style.display = "none";
+        note.text.style.display = "none";
+        //Начало создания editPanel
+        var editPanel = new EditTextPanel();
+        editPanel.textEdit.value = note.text.innerText;
+        editPanel.button.value = "Сохранить";
+        editPanel.button.onclick = function(){
+            note.text.innerText = editPanel.textEdit.value;
+            note.buttonEdit.style.display = "";
+            note.text.style.display = "";
+            editPanel.container.remove();
+        }
+        //Конец создания editPanel
+        note.body.appendChild(editPanel.container);
+    }
     var isStrike = false;
-    text.onclick = function(){
+    note.text.onclick = function(){
         if(isStrike){
             text.style.textDecoration = "";
         }else{
@@ -75,22 +86,11 @@ function Note(value){
         }     
         isStrike = !isStrike;
     }
-
-    body.appendChild(text);
-    div.appendChild(body);
-    div.appendChild(buttonEdit);
-    div.appendChild(button);
-
-    this.container = div;
+    //Конец создания NotePanel
+    listPanel.listNotes.appendChild(note.container);
+    addPanel.textEdit.value = "";
 }
 
 var container = document.getElementById("notes");
-
-var addPanel = new EditTextPanel("Cоздать");
-
-var listPanel = new ListPanel();
-
-addPanel.setListener(listPanel.addNote);
-
 container.appendChild(addPanel.container);
 container.appendChild(listPanel.container);
