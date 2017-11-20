@@ -46,7 +46,7 @@ var randomItemsModule = (function () {
         var randomNumberValue = getRandomNumber(0,maxRightValue);
         for(var i in tempCostItems){
             var temp = tempCostItems[i];
-            if(temp.left < randomNumberValue && temp.right >= randomNumberValue){
+            if(temp.right >= randomNumberValue){
                 return data[i];
             }
         }
