@@ -3,7 +3,6 @@ var speedGenEvent = (function () {
     var count = 0;
 
     function event(){
-        console.log(count);
         count++;
     }
 

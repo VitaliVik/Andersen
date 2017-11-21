@@ -2,6 +2,7 @@ var domBuilderRuletka = (function () {
     var btnSpin;
     var wheelSpace;
     var wonItemsSpace;
+    var bonusSpace;
 
 
     var countNeedSpin = 0;
@@ -12,13 +13,16 @@ var domBuilderRuletka = (function () {
         initControls();
         initListener();
         initWheelData();
+        initTimers();
     }
 
     function initControls() {
         btnSpin = document.getElementById(spinId);
         wheelSpace = document.getElementById(wheelId);
         wonItemsSpace = document.getElementById(wonItemsId);
+        bonusSpace = document.getElementById(bonusId);
     }
+
     function initWheelData() {
         for (var i = 0; i < sizeWheel; i++) {
             var item = randomItemsModule.getRandomItem(0);
@@ -32,6 +36,7 @@ var domBuilderRuletka = (function () {
 
     function spinWheelListener() {
         countNeedSpin = getRandomInt(mincountSpin, maxCountSpin);
+        btnSpin.disabled = true;
         spinWheel();
     }
 
@@ -44,6 +49,7 @@ var domBuilderRuletka = (function () {
         if (countNeedSpin == 0) {
             var wonItem = wheelData[middleIndexWheelData].item;
             addWonItem(createItem(wonItem));
+            btnSpin.disabled = false;
         } else {
             addRandomItemInWheel();
             countNeedSpin--;
@@ -62,7 +68,7 @@ var domBuilderRuletka = (function () {
             wheelData.splice(0, 1);
         }
 
-        var item = randomItemsModule.getRandomItem(speedGenEvent.getSpeed());
+        var item = randomItemsModule.getRandomItem(getBonus());
         addItemInWheel(item);
 
         wheelData[middleIndexWheelData].style.backgroundColor = colorMiddleItem;
@@ -81,6 +87,18 @@ var domBuilderRuletka = (function () {
         var li = document.createElement("li");
         li.innerHTML = item.name + ":" + item.cost;
         return li;
+    }
+
+    function initTimers(){
+        setInterval(updateValueBonus, intervalUpdateBonusValue);
+    }
+
+    function updateValueBonus(){
+        console.log(10213456, getBonus());
+        bonusSpace.innerHTML = getBonus();
+    }
+    function getBonus(){
+        return speedGenEvent.getSpeed();
     }
 
     return {

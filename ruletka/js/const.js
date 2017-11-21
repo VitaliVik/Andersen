@@ -1,6 +1,7 @@
 var spinId = 'spin';
 var wheelId = 'wheel';
 var wonItemsId = 'won_items';
+var bonusId = 'bonus';
 
 var eventTypeKeyPress = 'keypress';
 var eventTypeClick = 'click';
@@ -15,6 +16,7 @@ var emptyString = "";
 
 var intervalMeteringSpeed = 500;
 var intervalOneSecond = 1000;
+var intervalUpdateBonusValue = 100;
 
 var intervalSpinWheel = 500;
 
